@@ -1,19 +1,17 @@
 import React from 'react'
-import { StyleSheet, Text, View } from 'react-native'
+import { StatusBar } from 'react-native'
+import { Provider } from 'react-redux'
 
-export default function App() {
+import Screens from './src/screens'
+import store from './src/redux/store'
+
+const App = () => {
   return (
-    <View style={styles.container}>
-      <Text>Hello World</Text>
-    </View>
+    <Provider store={store}>
+      <StatusBar hidden />
+      <Screens />
+    </Provider>
   )
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-})
+export default App
