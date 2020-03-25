@@ -8,6 +8,7 @@ import {
   SET_PREV_PAGE,
   RECEIVE_SINGLE_RACER,
   REQUEST_SINGLE_RACER,
+  SET_RACER_ID
 } from './types'
 
 const BASE_URL = 'http://ergast.com/api/f1/drivers.json'
@@ -18,7 +19,7 @@ export const receiveRacers = (racers) => ({ type: RECEIVE_RACERS, racers })
 export const requestSingleRacer = () => ({ type: REQUEST_SINGLE_RACER })
 export const receiveSingleRacer = (racer) => ({
   type: RECEIVE_SINGLE_RACER,
-  racer,
+  racer
 })
 
 export const requestNextPage = () => ({ type: REQUEST_NEXT_PAGE })
@@ -27,13 +28,15 @@ export const requestPrevPage = () => ({ type: REQUEST_PREV_PAGE })
 // Synchronous actions
 export const setNextPage = (currentPage) => ({
   type: SET_NEXT_PAGE,
-  currentPage: currentPage + 10,
+  currentPage: currentPage + 10
 })
 
 export const setPrevPage = (currentPage) => ({
   type: SET_PREV_PAGE,
-  currentPage: currentPage > 10 && currentPage - 10,
+  currentPage: currentPage > 10 && currentPage - 10
 })
+
+export const setRacerId = (id) => ({ type: SET_RACER_ID, id })
 
 // Asynchronous actions
 export const fetchRacers = (currentPage) => {
@@ -77,5 +80,3 @@ export const fetchSingleRacer = (id) => {
       .then((response) => dispatch(receiveSingleRacer(response.data)))
   }
 }
-
-// dispatch(receiveSingleRacer(response.data)

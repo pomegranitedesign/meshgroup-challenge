@@ -11,6 +11,7 @@ import {
   fetchPrevPage,
   setNextPage,
   setPrevPage,
+  setRacerId,
   fetchSingleRacer
 } from '../redux/actions'
 
@@ -21,9 +22,10 @@ const DataTableApp = (props) => {
     handleFetchRacers()
   }, [])
 
-  const handleSelectRacer = async (driverId) => {
-    await props.fetchSingleRacer(driverId)
-    props.navigation.push('Racer')
+  const handleSelectRacer = (driverId) => {
+    props
+      .fetchSingleRacer(driverId)
+      .then((data) => props.navigation.push('Racer', { racer: data.racer }))
   }
 
   const handlePrevPage = async () => {
@@ -115,6 +117,7 @@ const mapDispatchToProps = (dispatch) =>
       fetchPrevPage,
       setNextPage,
       setPrevPage,
+      setRacerId,
       fetchSingleRacer
     },
     dispatch

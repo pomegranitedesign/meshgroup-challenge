@@ -6,12 +6,14 @@ import {
   SET_NEXT_PAGE,
   SET_PREV_PAGE,
   RECEIVE_SINGLE_RACER,
-  REQUEST_SINGLE_RACER
+  REQUEST_SINGLE_RACER,
+  SET_RACER_ID
 } from './types'
 
 const initialState = {
   racers: [],
-  racer: null,
+  racer: {},
+  racerId: '',
   isFetching: false,
   isFetchingSingleRacer: false,
   currentPage: 10
@@ -19,15 +21,18 @@ const initialState = {
 
 const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case SET_RACER_ID:
+      return { ...state, racerId: action.id }
+
     case RECEIVE_SINGLE_RACER:
       return {
         ...state,
-        isFetcisFetchingSingleRacerhing: false,
+        isFetchingSingleRacer: false,
         racer: action.racer
       }
 
     case REQUEST_SINGLE_RACER:
-      return { ...state, isFetcisFetchingSingleRacerhing: true }
+      return { ...state, isFetchingSingleRacer: true }
 
     case SET_PREV_PAGE:
       return { ...state, currentPage: action.currentPage }

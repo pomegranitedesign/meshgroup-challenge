@@ -1,27 +1,27 @@
 import React, { useState, useEffect, Fragment } from 'react'
-import { View, Text, StyleSheet } from 'react-native'
-import { connect } from 'react-redux'
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native'
 import { parseString } from 'react-native-xml2js'
-import { ActivityIndicator } from 'react-native-paper'
 
 const Racer = (props) => {
   const [currentRacer, setCurrentRacer] = useState(null)
+  const [parsing, setParsing] = useState(true)
 
   useEffect(() => {
-    const getSingleRacer = async () =>
-      await parseString(props.currentState.racer, (error, result) => {
+    const parseXML = async () =>
+      await parseString(props.route.params.racer, (error, result) => {
         if (error) throw new Error(error)
-        else setCurrentRacer(result.MRData.DriverTable[0].Driver[0])
+        else {
+          setParsing(false)
+          setCurrentRacer(result.MRData.DriverTable[0].Driver[0])
+        }
       })
 
-    getSingleRacer()
-  }, [parseString])
+    parseXML()
+  }, [parseString, setCurrentRacer, setParsing])
 
   return (
     <View style={styles.container}>
-      {props.currentState.isFetchingSingleRacer && currentRacer === null ? (
-        <ActivityIndicator size="large" color="#454545" />
-      ) : (
+      {!parsing && (
         <Fragment>
           <Text style={styles.driverIdContainer}>
             Driver ID:{' '}
@@ -68,5 +68,4 @@ const styles = StyleSheet.create({
   }
 })
 
-const mapStateToProps = (state) => ({ currentState: state })
-export default connect(mapStateToProps, null)(Racer)
+export default Racer
