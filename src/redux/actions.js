@@ -3,11 +3,11 @@ import {
   REQUEST_RACERS,
   RECEIVE_RACERS,
   REQUEST_NEXT_PAGE,
-  RECEIVE_NEXT_PAGE,
   REQUEST_PREV_PAGE,
-  RECEIVE_PREV_PAGE,
   SET_NEXT_PAGE,
   SET_PREV_PAGE,
+  RECEIVE_SINGLE_RACER,
+  REQUEST_SINGLE_RACER,
 } from './types'
 
 const BASE_URL = 'http://ergast.com/api/f1/drivers.json'
@@ -15,12 +15,16 @@ const BASE_URL = 'http://ergast.com/api/f1/drivers.json'
 export const requestRacers = () => ({ type: REQUEST_RACERS })
 export const receiveRacers = (racers) => ({ type: RECEIVE_RACERS, racers })
 
+export const requestSingleRacer = () => ({ type: REQUEST_SINGLE_RACER })
+export const receiveSingleRacer = (racer) => ({
+  type: RECEIVE_SINGLE_RACER,
+  racer,
+})
+
 export const requestNextPage = () => ({ type: REQUEST_NEXT_PAGE })
-export const receiveNextPage = (racers) => ({ type: RECEIVE_NEXT_PAGE, racers })
-
 export const requestPrevPage = () => ({ type: REQUEST_PREV_PAGE })
-export const receivePrevPage = (racers) => ({ type: RECEIVE_PREV_PAGE, racers })
 
+// Synchronous actions
 export const setNextPage = (currentPage) => ({
   type: SET_NEXT_PAGE,
   currentPage: currentPage + 10,
@@ -31,6 +35,7 @@ export const setPrevPage = (currentPage) => ({
   currentPage: currentPage > 10 && currentPage - 10,
 })
 
+// Asynchronous actions
 export const fetchRacers = (currentPage) => {
   return (dispatch) => {
     dispatch(requestRacers())
@@ -63,3 +68,14 @@ export const fetchPrevPage = (currentPage) => {
       )
   }
 }
+
+export const fetchSingleRacer = (id) => {
+  return (dispatch) => {
+    dispatch(requestSingleRacer())
+    return axios
+      .get(`http://ergast.com/api/f1/drivers/${id}`)
+      .then((response) => dispatch(receiveSingleRacer(response.data)))
+  }
+}
+
+// dispatch(receiveSingleRacer(response.data)

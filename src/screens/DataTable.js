@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, Fragment } from 'react'
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native'
 import { connect } from 'react-redux'
 import { bindActionCreators } from 'redux'
@@ -11,15 +11,20 @@ import {
   fetchPrevPage,
   setNextPage,
   setPrevPage,
+  fetchSingleRacer
 } from '../redux/actions'
 
 const DataTableApp = (props) => {
   useEffect(() => {
     const handleFetchRacers = async () =>
       props.fetchRacers(props.currentState.currentPage)
-
     handleFetchRacers()
   }, [])
+
+  const handleSelectRacer = async (driverId) => {
+    await props.fetchSingleRacer(driverId)
+    props.navigation.push('Racer')
+  }
 
   const handlePrevPage = async () => {
     await props.setPrevPage(props.currentState.currentPage)
@@ -31,10 +36,7 @@ const DataTableApp = (props) => {
     await props.fetchNextPage(props.currentState.currentPage)
   }
 
-  // TODO: Click on the driver's name and open the appropriate screen with all data
-
   const { currentState } = props
-  console.log(props)
   return (
     <View style={styles.container}>
       {currentState.isFetching ? (
@@ -42,39 +44,42 @@ const DataTableApp = (props) => {
           <ActivityIndicator size="large" color="#0000ff" />
         </View>
       ) : (
-        <DataTable>
-          <DataTable.Header>
-            <DataTable.Title>Driver ID</DataTable.Title>
-            <DataTable.Title>Full Name</DataTable.Title>
-          </DataTable.Header>
+        <Fragment>
+          <DataTable>
+            <DataTable.Header>
+              <DataTable.Title>Driver ID</DataTable.Title>
+              <DataTable.Title>Full Name</DataTable.Title>
+            </DataTable.Header>
 
-          {currentState.racers.map((racer) => {
-            return (
-              <DataTable.Row key={racer.driverId}>
-                <DataTable.Cell>
-                  <Text>{racer.driverId}</Text>
-                </DataTable.Cell>
-                <DataTable.Cell>
-                  <Text>{racer.givenName + ' ' + racer.familyName}</Text>
-                </DataTable.Cell>
-              </DataTable.Row>
-            )
-          })}
-        </DataTable>
+            {currentState.racers.map((racer) => {
+              return (
+                <DataTable.Row key={racer.driverId}>
+                  <DataTable.Cell>
+                    <Text>{racer.driverId}</Text>
+                  </DataTable.Cell>
+                  <DataTable.Cell
+                    onPress={() => handleSelectRacer(racer.driverId)}
+                  >
+                    <Text>{racer.givenName + ' ' + racer.familyName}</Text>
+                  </DataTable.Cell>
+                </DataTable.Row>
+              )
+            })}
+          </DataTable>
+          <View style={styles.buttonsContainer}>
+            <TouchableOpacity
+              onPress={handlePrevPage}
+              disabled={props.currentState.currentPage === 10}
+            >
+              <Text>Previous</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity onPress={handleNextPage}>
+              <Text>Next</Text>
+            </TouchableOpacity>
+          </View>
+        </Fragment>
       )}
-
-      <View style={styles.buttonsContainer}>
-        <TouchableOpacity
-          onPress={handlePrevPage}
-          disabled={props.currentState.currentPage === 10}
-        >
-          <Text>Previous</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={handleNextPage}>
-          <Text>Next</Text>
-        </TouchableOpacity>
-      </View>
     </View>
   )
 }
@@ -83,7 +88,7 @@ const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 20,
     paddingVertical: 50,
-    height: '100%',
+    height: '100%'
   },
 
   buttonsContainer: {
@@ -91,20 +96,27 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '100%',
     paddingHorizontal: 50,
-    paddingVertical: 30,
+    paddingVertical: 30
   },
 
   spinnerContainer: {
-    height: '82.8%',
+    height: '100%',
     justifyContent: 'center',
-    alignItems: 'center',
-  },
+    alignItems: 'center'
+  }
 })
 
 const mapStateToProps = (state) => ({ currentState: state })
 const mapDispatchToProps = (dispatch) =>
   bindActionCreators(
-    { fetchRacers, fetchNextPage, fetchPrevPage, setNextPage, setPrevPage },
+    {
+      fetchRacers,
+      fetchNextPage,
+      fetchPrevPage,
+      setNextPage,
+      setPrevPage,
+      fetchSingleRacer
+    },
     dispatch
   )
 
