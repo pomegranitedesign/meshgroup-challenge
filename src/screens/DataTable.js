@@ -28,14 +28,14 @@ const DataTableApp = (props) => {
       .then((data) => props.navigation.push('Racer', { racer: data.racer }))
   }
 
-  const handlePrevPage = async () => {
-    await props.setPrevPage(props.currentState.currentPage)
-    await props.fetchPrevPage(props.currentState.currentPage)
+  const handlePrevPage = () => {
+    props.setPrevPage(props.currentState.currentPage)
+    props.fetchPrevPage(props.currentState.currentPage)
   }
 
-  const handleNextPage = async () => {
-    await props.setNextPage(props.currentState.currentPage)
-    await props.fetchNextPage(props.currentState.currentPage)
+  const handleNextPage = () => {
+    props.setNextPage(props.currentState.currentPage)
+    props.fetchNextPage(props.currentState.currentPage)
   }
 
   const { currentState } = props
@@ -72,11 +72,19 @@ const DataTableApp = (props) => {
             <TouchableOpacity
               onPress={handlePrevPage}
               disabled={props.currentState.currentPage === 10}
+              style={
+                props.currentState.currentPage === 10
+                  ? styles.buttonDisabled
+                  : styles.prevButton
+              }
             >
               <Text>Previous</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity onPress={handleNextPage}>
+            <TouchableOpacity
+              onPress={handleNextPage}
+              style={styles.nextButton}
+            >
               <Text>Next</Text>
             </TouchableOpacity>
           </View>
@@ -105,6 +113,24 @@ const styles = StyleSheet.create({
     height: '100%',
     justifyContent: 'center',
     alignItems: 'center'
+  },
+
+  prevButton: {
+    padding: 20,
+    borderRadius: 3,
+    backgroundColor: '#f5f17a'
+  },
+
+  nextButton: {
+    padding: 20,
+    borderRadius: 3,
+    backgroundColor: '#53fcb3'
+  },
+
+  buttonDisabled: {
+    backgroundColor: '#b8b8b8',
+    padding: 20,
+    borderRadius: 3
   }
 })
 
