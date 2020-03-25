@@ -15,7 +15,6 @@ const initialState = {
   racer: {},
   racerId: '',
   isFetching: false,
-  isFetchingSingleRacer: false,
   currentPage: 10
 }
 
@@ -27,12 +26,12 @@ const reducer = (state = initialState, action) => {
     case RECEIVE_SINGLE_RACER:
       return {
         ...state,
-        isFetchingSingleRacer: false,
+        isFetching: false,
         racer: action.racer
       }
 
     case REQUEST_SINGLE_RACER:
-      return { ...state, isFetchingSingleRacer: true }
+      return { ...state, isFetching: true }
 
     case SET_PREV_PAGE:
       return { ...state, currentPage: action.currentPage }
