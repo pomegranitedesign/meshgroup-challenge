@@ -6,7 +6,7 @@ import DataTable from './DataTable'
 
 const Stack = createStackNavigator()
 
-const Screens = (props) => {
+const Screens = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator headerMode="none">
